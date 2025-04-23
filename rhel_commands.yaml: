@@ -1,11 +1,15 @@
-- instruction: "How do I check disk space usage?"
+- instruction: "How to add a new user in RHEL?"
   response: |
-    Use `df -h` to see disk usage in human-readable format.
+    Command: `sudo useradd <username>`
+    Options:
+    - `-m`: Create home directory
+    - `-G wheel`: Add to sudo group (RHEL)
+    - `-s /bin/bash`: Set default shell
+    WARNING: Always set a password with `passwd <username>`.
 
-- instruction: "How to find large files in /var?"
+- instruction: "Check if a service is running"
   response: |
-    Run: `sudo find /var -type f -size +100M -exec ls -lh {} \;`
-
-- instruction: "Restart a service in RHEL"
-  response: |
-    Use: `sudo systemctl restart <service_name>`
+    Command: `systemctl is-active <service>`
+    Alternatives:
+    - `systemctl status <service>` (detailed view)
+    - `sudo firewall-cmd --list-services` (for firewall)
