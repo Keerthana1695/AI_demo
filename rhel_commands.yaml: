@@ -1,0 +1,11 @@
+- instruction: "How do I check disk space usage?"
+  response: |
+    Use `df -h` to see disk usage in human-readable format.
+
+- instruction: "How to find large files in /var?"
+  response: |
+    Run: `sudo find /var -type f -size +100M -exec ls -lh {} \;`
+
+- instruction: "Restart a service in RHEL"
+  response: |
+    Use: `sudo systemctl restart <service_name>`
