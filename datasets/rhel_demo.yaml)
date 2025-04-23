@@ -1,0 +1,16 @@
+- instruction: "How to check disk space?"
+  response: |
+    Command: `df -h`
+    Explanation: Shows disk usage in human-readable format
+    Safe-to-run: true
+
+- instruction: "List running services"
+  response: |
+    Command: `systemctl list-units --type=service --state=running`
+    Tags: [systemd, services]
+
+- instruction: "Check open ports"
+  response: |
+    Command: `ss -tulnp`
+    Explanation: Lists listening ports with processes
+    Risk: Low
