@@ -1,0 +1,41 @@
+#!/bin/bash
+MODEL_PATH="$HOME/instruct-lab/rhel-cli-helper"  # Update this path
+
+# Safety check - prevent dangerous commands
+declare -a BLACKLIST=("rm -rf" "chmod 777" "dd" "mkfs" "> /dev/sda")
+
+query_ai() {
+  local prompt="$*"
+  ilab query --model "$MODEL_PATH" --prompt "$prompt"
+}
+
+safety_check() {
+  local cmd="$1"
+  for banned in "${BLACKLIST[@]}"; do
+    if [[ "$cmd" == *"$banned"* ]]; then
+      echo -e "\033[1;31mBLOCKED: Potentially dangerous command\033[0m" >&2
+      return 1
+    fi
+  done
+  return 0
+}
+
+main() {
+  response=$(query_ai "$@")
+  
+  echo -e "\033[1;36mAI Suggests:\033[0m"
+  echo "$response"
+  
+  if [[ "$response" == Command:* ]]; then
+    cmd=$(echo "$response" | grep -oP 'Command: \K`.*?`' | tr -d '`')
+    if safety_check "$cmd"; then
+      read -p "Execute? (y/N/show): " choice
+      case "$choice" in
+        y|Y) eval "$cmd" ;;
+        s|S) man $(echo "$cmd" | awk '{print $1}') ;;
+      esac
+    fi
+  fi
+}
+
+main "$@"
