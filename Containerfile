@@ -1,13 +1,15 @@
 FROM registry.access.redhat.com/ubi9/python-311
 
-# Install Python deps as non-root user
-RUN pip install --upgrade pip --user && \
-    pip install transformers torch sentencepiece --user
+# Install only necessary Python packages
+RUN pip install --no-cache-dir \
+    transformers \
+    torch \
+    sentencepiece \
+    accelerate  # For better CPU/GPU utilization
 
-# Copy your script
-COPY ai_cli_helper.py /app/
-WORKDIR /app
+COPY ai_cli_helper.py ./
 
-# Run as non-root
-USER 1001
+# Use a different model that doesn't need Ollama
+ENV MODEL_NAME="google/flan-t5-small"
+
 CMD ["python3", "ai_cli_helper.py"]
